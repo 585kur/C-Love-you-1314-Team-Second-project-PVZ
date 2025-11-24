@@ -1,0 +1,26 @@
+#pragma once
+#include "Component.h"
+#include <cmath>
+
+struct Vector2D {  //
+    float x, y;
+    float GetDistance(const Vector2D& other) const {      //两点间距离，Collider
+        double dx = x - other.x;
+        double dy = y - other.y;
+        return static_cast<float>(std::sqrt(std::pow(dx, 2) + std::pow(dy, 2)));
+    }
+};
+class Transform : public Component {
+private:
+    Vector2D position = { 0, 0 };
+    Vector2D scale = { 1, 1 };
+public:
+    void SetPosition(float x, float y) { position = { x, y }; }  //获取对象位置
+    Vector2D GetPosition() const { return position; }
+
+
+    //
+    void SetScale(float sx, float sy) { scale = { sx, sy }; }   //对象缩放的比例，渲染
+    Vector2D GetScale() const { return scale; }
+};
+
