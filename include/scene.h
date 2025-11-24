@@ -1,12 +1,17 @@
 #pragma once
 #include <graphics.h>
 #include <string>
+#include <memory>  
 
-// 抽象基类：所有场景都继承它
+class World;
+class ObjectManager;
+
 class Scene
 {
 protected:
-    std::string sceneName;  // 场景名称，可在调试时显示
+    std::string sceneName;                  // 
+    std::unique_ptr<World> sceneWorld;      // 独立碰撞管理器，
+    std::unique_ptr<ObjectManager> objMgr;  // 独立碰撞管理器，
 
 public:
     Scene(const std::string& name);
@@ -21,12 +26,20 @@ public:
     // 键盘鼠标输入处理
     virtual void handleInput(const ExMessage& msg);
 
-    // 场景进入时调用
-    virtual void onEnter();
+    virtual void onEnter() {
+        // 默认进入逻辑：初始化碰撞世界和对象管理器
+        sceneWorld = std::make_unique<World>();
+        objMgr = std::make_unique<ObjectManager>();
+    }
 
-    // 场景退出时调用
-    virtual void onExit();
+    virtual void onExit() {
+        // 默认退出逻辑：清空对象和碰撞体，释放资源
+        sceneWorld.reset();
+        objMgr.reset();
+    }
 
-    // 获取场景名称
-    const std::string& getName() const;
+    // ========== 访问器（给子类暴露核心管理器） ==========
+    World* GetWorld() const { return sceneWorld.get(); }
+    ObjectManager* GetObjectManager() const { return objMgr.get(); }
+    const std::string& getName() const { return sceneName; }
 };
