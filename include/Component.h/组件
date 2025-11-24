@@ -1,0 +1,16 @@
+#pragma once
+class Object;
+
+class Component {
+protected:
+    Object* owner = nullptr; // 所属游戏对象
+public:
+    virtual ~Component() = default;   
+    void SetOwner(Object* obj) { owner = obj; }  //获取游戏对象，建立组件与游戏对象关系
+    Object* GetOwner() const { return owner; }   //
+
+    //接口，子类具体实现
+    virtual void Update(float dt) {}  //Collider::Updata
+    virtual void Draw() {}   //Sprite::Draw()
+};
+
