@@ -1,0 +1,45 @@
+#pragma once
+#include <unordered_map>
+#include <typeindex>
+#include<string>
+#include "Component.h"
+#include "Transform.h"
+
+class Object {
+private:
+    std::unordered_map<std::type_index, Component*> components;  //存对象的组件
+    bool alive = true;   
+    std::string type; // 游戏对象类型：Plant、Zombie、Bullet
+public:
+    Object(const std::string& type) : type(type) {  //构造函数：指定对象类型
+        AddComponent<Transform>();  //对象的位置信息
+    }
+
+    ~Object() {
+        for (auto& pair : components) {
+            delete pair.second;
+        }
+    }
+
+  //天价组件
+    template<typename T, typename... Args>
+    T* AddComponent(Args&&... args) {
+        static_assert(std::is_base_of<Component, T>::value, "T必须继承Component");
+        T* comp = new T(std::forward<Args>(args)...); // 传递参数给组件构造
+        components[typeid(T)] = comp;
+        comp->SetOwner(this);
+        return comp;
+    }
+
+    //按照游戏对象类型挂在组件
+    template<typename T>
+    T* GetComponent() {
+        auto it = components.find(typeid(T));
+        return it != components.end() ? static_cast<T*>(it->second) : nullptr;
+    }
+
+    bool IsAlive() const { return alive; }
+    void Destroy() { alive = false; }
+    const std::string& GetType() const { return type; }
+    Transform* GetTransform() { return GetComponent<Transform>(); }
+};
