@@ -1,69 +1,80 @@
 #include "Scene.h"
-#include <iostream>
+#include "World.h"
+#include "ObjectManager.h"
+#include "Object.h" 
+#include <graphics.h>
 
-Scene::Scene(const std::string& name)
-    : sceneName(name)
-{
-}
 
-Scene::~Scene()
-{
-}
+// ���캯������ʼ����������
+//Scene::Scene() {}
+Scene::Scene(const std::string& name) : sceneName(name) {}
 
-// 绘图：默认绘制背景和场景名称
-void Scene::drawTick()
-{
-    // 默认清屏（避免残影）
-    cleardevice();
+// ����������
+Scene::~Scene() {}
 
-    // 默认绘制背景为浅灰色
-    setfillcolor(RGB(240, 240, 240));
-    solidrectangle(0, 0, getwidth(), getheight());
+//void Scene::eventTick(float dt) {
+//    if (objMgr) {
+//        objMgr->UpdateAll(dt);
+//    }
+//
+//}
+//
+//
+//void Scene::drawTick() {
+//
+//    if (sceneWorld) {
+//        setcolor(sceneWorld->GetBackgroundColor());
+//    }
+//    else {
+//        setcolor(WHITE); // Ĭ�ϰ�ɫ����
+//    }
+//    cleardevice();
+//
+//    // 2. ��ȡ���ж��󲢻�������
+//    if (objMgr) {
+//        std::vector<Object*> allObjects = objMgr->GetAllObjects();
+//        for (Object* obj : allObjects) {
+//            if (obj->IsAlive()) {
+//                obj->Draw();
+//            }
+//        }
+//    }
+//
+//}
+//
+//void Scene::handleInput(const ExMessage& msg) {
+//
+//    switch (msg.message) {
+//
+//    case WM_KEYDOWN:
+//        if (msg.vkcode == VK_ESCAPE) {
+//
+//        }
+//        break;
+//
+//    case WM_LBUTTONDOWN:
+//
+//        if (sceneWorld) {
+//            sceneWorld->HandleClick(msg.x, msg.y);
+//        }
+//        break;
+//
+//    }
+//}
 
-    // 显示当前场景名称（调试）
-    settextcolor(BLACK);
-    settextstyle(20, 0, "Consolas");
-    outtextxy(10, 10, sceneName.c_str());
-}
+//void Scene::onEnter() {
+//
+//    sceneWorld = std::make_unique<World>();
+//    objMgr = std::make_unique<ObjectManager>();
+//
+//    // objMgr->CreateObject<Player>("Player", 100, 100);
+//    // objMgr->CreateObject<Enemy>("Enemy", 500, 300);
+//}
 
-// 逻辑更新：默认只是打印 dt
-void Scene::eventTick(float dt)
-{
-    //这里只提供继承给levelScene的接口，需要levelScene继承后去编写具体逻辑
-}
-
-// 输入处理：默认处理 ESC 退出输入
-void Scene::handleInput(const ExMessage& msg)
-{
-    if (msg.message == WM_KEYDOWN)
-    {
-        if (msg.vkcode == VK_ESCAPE)
-        {
-            std::cout << "ESC pressed in scene: " << sceneName << std::endl;
-        }
-    }
-
-    if (msg.message == WM_LBUTTONDOWN)
-    {
-        std::cout << "[Scene] Mouse click at (" 
-                  << msg.x << ", " << msg.y << ")\n";
-    }
-}
-
-// 场景进入时触发
-void Scene::onEnter()
-{
-    std::cout << "Entering scene: " << sceneName << std::endl;
-}
-
-// 场景退出时触发
-void Scene::onExit()
-{
-    std::cout << "Exiting scene: " << sceneName << std::endl;
-}
-
-// 获取场景名称
-const std::string& Scene::getName() const
-{
-    return sceneName;
-}
+//void Scene::onExit() {
+//
+//
+//    sceneWorld.reset();
+//    objMgr.reset();
+//
+//}
