@@ -10,11 +10,13 @@ public:
     Sunflower(int x, int y);
 
     // 重写绘制方法
-    void draw() const override;
+   // void draw() const override;
+    void draw();
 
     // 重写更新逻辑
     void update();
 
     // 重写生产阳光方法
-    int produce_sunshine() override;
+    //int produce_sunshine() override;
+     int produce_sunshine();
 };
