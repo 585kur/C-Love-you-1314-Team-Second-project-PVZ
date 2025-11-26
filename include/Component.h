@@ -3,13 +3,13 @@ class Object;
 
 class Component {
 protected:
-    Object* owner = nullptr; // æ‰€å±æ¸¸æˆå¯¹è±¡
+    Object* owner = nullptr; // ËùÊôÓÎÏ·¶ÔÏó
 public:
     virtual ~Component() = default;   
-    void SetOwner(Object* obj) { owner = obj; }  //è·å–æ¸¸æˆå¯¹è±¡ï¼Œå»ºç«‹ç»„ä»¶ä¸æ¸¸æˆå¯¹è±¡å…³ç³»
+    void SetOwner(Object* obj) { owner = obj; }  //»ñÈ¡ÓÎÏ·¶ÔÏó£¬½¨Á¢×é¼şÓëÓÎÏ·¶ÔÏó¹ØÏµ
     Object* GetOwner() const { return owner; }   //
 
-    //æ¥å£ï¼Œå­ç±»å…·ä½“å®ç°
+    //½Ó¿Ú£¬×ÓÀà¾ßÌåÊµÏÖ
     virtual void Update(float dt) {}  //Collider::Updata
     virtual void Draw() {}   //Sprite::Draw()
 };
