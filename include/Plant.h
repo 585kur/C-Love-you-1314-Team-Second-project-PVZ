@@ -1,5 +1,6 @@
 #pragma once
-#include "Entity.h"
+#include "Object.h"  
+#include "Collider.h" 
 
 // 植物类型枚举
 enum class PlantType {
@@ -9,33 +10,47 @@ enum class PlantType {
     WALLNUT
 };
 
-// 植物基类
-class Plant : public Entity {
+// 植物基类：继承Object，用组件实现功能
+class Plant : public Object {
 protected:
-    PlantType plant_type;   // 植物类型
-    int health;             // 生命值
-    int max_health;         // 最大生命值
-    int cost;               // 阳光成本
+    PlantType plant_type;
+    int health;
+    int max_health;
+    int cost;
 
 public:
-    // 构造函数
-    Plant(PlantType type, int x, int y, int width, int height, int health, int cost);
+    virtual void update() = 0;
+    Plant(const std::string& objType, PlantType type, int health, int cost);
 
-    // 析构函数
-    virtual ~Plant() = default;
+    // 纯虚绘制函数（子类实现）
+    virtual void draw() const = 0;
 
-    // 纯虚函数，绘制植物，必须在子类中实现
-    virtual void draw() const override = 0;
-
-    // 植物受到伤害
+    // 植物受伤逻辑
     virtual void take_damage(int amount);
 
-    // 生产阳光 (对于向日葵等植物)
+    // 生产阳光（子类重写）
     virtual int produce_sunshine();
 
-    // --- Getter 和 Setter ---
-    PlantType get_plant_type() const;
-    int get_health() const;
-    int get_max_health() const;
-    int get_cost() const;
+    // Getter
+    PlantType get_plant_type() const { return plant_type; }
+    int get_health() const { return health; }
+    int get_max_health() const { return max_health; }
+    int get_cost() const { return cost; }
+
+    // 位置/尺寸通过Transform组件操作
+    void SetPosition(float x, float y) {
+        // 调用非const版本的GetTransform，返回Transform*
+        Transform* trans = GetTransform();
+        if (trans) trans->SetPosition(x, y);
+    }
+
+    // 补充受攻击方法
+    void onAttacked(int damage) {
+        take_damage(damage);
+    }
+
+    // 补充死亡判断方法
+    bool is_dead() const {
+        return health <= 0;
+    }
 };
