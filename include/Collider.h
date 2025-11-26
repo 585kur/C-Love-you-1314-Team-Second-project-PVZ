@@ -1,83 +1,142 @@
 #pragma once
-#include "Component.h"
-#include "Object.h"
-#include <unordered_set>
-#include <vector>
+#include "Component.h" 
+#include "Transform.h"
 #include <string>
+#include <cmath>
+#include <vector>
 #include "World.h"
-
-extern World mainWorld;
-
-enum class ColliderShape { Circle, Box };
+#include "Object.h" 
 
 class Collider : public Component {
-protected:
-    ColliderShape shape;
-    int layer = 0; // ç¢°æ’å±‚çº§ï¼Œæ¤ç‰©-ã€‹åƒµå°¸ï¼Œ
-    std::unordered_set<Collider*> collisions; // å½“äº²å¸§ç‡ç¢°æ’ç»“æœ
-    std::vector<Object*> filteredAims; // æŒ‰ç±»å‹ç­›é€‰çš„ç»“æœ
-
-    // ç¢°æ’åˆ¤æ–­ï¼šåŸé˜Ÿå‘˜ï¼ŒåŸå¯¹æ–¹ï¼Œæ”¾å¯¹æ–¹ï¼Œæ”¾é˜Ÿå‘˜
-    virtual bool CollisionJudge(Collider* other) = 0;
 public:
-    Collider(ColliderShape shape) : shape(shape) {
-        mainWorld.AddCollider(this); // æ³¨å†Œåˆ°å…¨å±€ç¢°æ’ç®¡ç†å™¨
+    // »ñÈ¡ÓÎÏ·¶ÔÏó
+    Object* GetOwner() const {
+        return owner; // ×ÓÀàÄÚ²¿Ö±½Ó·ÃÎÊowner
     }
 
-    virtual ~Collider() {
-        mainWorld.RemoveCollider(this); // æ³¨é”€
+    //¶ÔÏóÎ»ÖÃ
+    Vector2D GetOwnerPosition() const {
+        if (!owner) return { 0, 0 };
+        Transform* trans = owner->GetTransform();
+        return trans ? trans->GetPosition() : Vector2D{ 0, 0 };
     }
 
-    // ç¢°æ’ç»“æœå¤„ç†ï¼ŒåŒæ–¹éƒ½èƒ½è·çš„ç¢°æ’ç»“æœ
-    void ClearCollisions() { collisions.clear(); }
-    void AddCollision(Collider* other) {
-        if (collisions.find(other) == collisions.end() && CollisionJudge(other)) {
-            collisions.insert(other);
-            other->collisions.insert(this); // åŒå‘è®°å½•
-        }
-    }
+    // ĞÎ×´
+    enum class ColliderShape { Circle, Box };
+    Collider(ColliderShape shape) : m_shape(shape) {}
 
-    // æŒ‰ç±»å‹ç­›é€‰ç¢°æ’å¯¹è±¡ï¼šæ¤ç‰©å¯¹åƒµå°¸
-    const std::vector<Object*>& GetCollisionsByType(const std::string& type) {
-        filteredAims.clear();
-        for (Collider* col : collisions) {
-            if (col->GetOwner()->GetType() == type) {
-                filteredAims.push_back(col->GetOwner());
+    virtual ~Collider() = default;
+
+    // ´¿ĞéÅö×²ÅĞ¶Ïº¯Êı£¨ºËĞÄ£ºÅĞ¶ÏÓëÁíÒ»¸öÅö×²ÌåÊÇ·ñÏà½»£©
+    virtual bool CollisionJudge(Collider* other) = 0;
+
+    // »ñÈ¡ĞÎ×´
+    ColliderShape GetShape() const { return m_shape; }
+
+    void ClearCollisions() { collidedObjects.clear(); }  //Ã¿Ö¡Ç°µ÷ÓÃ
+
+    void AddCollisionObject(Object* obj) { collidedObjects.push_back(obj); }  //Åö×²³É¹¦Ê±Ìí¼ÓÓÎÏ·¶ÔÏóµ½ÓÎÏ·¶ÔÏóÁĞ±íÖĞ
+    std::vector<Object*> GetCollisionsByType(const std::string& type) {  //°´ÕÕÓÎÏ·¶ÔÏó»ñÈ¡Åö×²
+        std::vector<Object*> result;
+        for (Object* obj : collidedObjects) {
+            if (obj && obj->GetType() == type) {
+                result.push_back(obj);
             }
         }
-        return filteredAims;
+        return result;
+    }
+    const std::vector<Object*>& GetAllCollisions() const { return collidedObjects; }
+
+protected:
+    ColliderShape m_shape;
+    std::vector<Object*> collidedObjects; // ´æ´¢Åö×²µ½µÄ¶ÔÏó
+};
+
+// Ç°ÏòÉùÃ÷BoxCollider£¨¹©CircleColliderÊ¹ÓÃ£©
+class BoxCollider;
+
+// ===================== Ô²ĞÎÅö×²Ìå×ÓÀà£¨ÏÈ¶¨Òå£¬È·±£BoxColliderÄÜ·ÃÎÊ£© =====================
+class CircleCollider : public Collider {
+private:
+    float m_radius; // Ô²ĞÎ°ë¾¶
+
+public:
+    // ¹¹Ôìº¯Êı£º´«ÈëÔ²ĞÎ°ë¾¶
+    CircleCollider(float radius)
+        : Collider(ColliderShape::Circle), m_radius(radius) {
+    }
+
+    // ÊµÏÖÅö×²ÅĞ¶Ï£¨´¦ÀíÔ²ĞÎ-Ô²ĞÎ¡¢Ô²ĞÎ-¾ØĞÎÅö×²£©
+    bool CollisionJudge(Collider* other) override {
+        if (!other || !GetOwner() || !other->GetOwner()) return false;
+
+        Vector2D posA = GetOwnerPosition();
+        Vector2D posB = other->GetOwnerPosition();
+
+        // Ô²ĞÎ vs Ô²ĞÎ
+        if (other->GetShape() == ColliderShape::Circle) {
+            CircleCollider* circleOther = static_cast<CircleCollider*>(other);
+            // ¾àÀëÅĞ¶Ï£ºÁ½Ô²ĞÄ¾àÀë <= °ë¾¶Ö®ºÍ
+            float dx = posA.x - posB.x;
+            float dy = posA.y - posB.y;
+            float distanceSq = dx * dx + dy * dy;
+            float radiusSum = m_radius + circleOther->m_radius;
+            return distanceSq <= (radiusSum * radiusSum);
+        }
+        // Ô²ĞÎ vs ¾ØĞÎ£¨¸´ÓÃ¾ØĞÎµÄÅĞ¶ÏÂß¼­£©
+        else if (other->GetShape() == ColliderShape::Box) {
+            return other->CollisionJudge(this); // ¶Ô³ÆÂß¼­£¬ÈÃ¾ØĞÎÅĞ¶Ï×Ô¼º
+        }
+        return false;
     }
 
     // Getter
-    ColliderShape GetShape() const { return shape; }
-    int GetLayer() const { return layer; }
-    void SetLayer(int layer) { this->layer = layer; }
+    float GetRadius() const { return m_radius; }
 };
 
-// åœ†å½¢ç¢°æ’ä½“å­ç±»
-class CircleCollider : public Collider {
-private:
-    float radius = 0;
-public:
-    CircleCollider(float radius) : Collider(ColliderShape::Circle), radius(radius) {}
-
-    void SetRadius(float r) { radius = r; }
-    float GetRadius() const { return radius; }
-
-    bool CollisionJudge(Collider* other) override; // å®ç°è§cpp
-};
-
-// çŸ©å½¢ç¢°æ’ä½“å­ç±»
+// ===================== ¾ØĞÎÅö×²Ìå×ÓÀà£¨ºó¶¨Òå£¬´ËÊ±CircleColliderÒÑÍêÕû£© =====================
 class BoxCollider : public Collider {
 private:
-    float width = 0, height = 0;
+    float m_width;  // ¾ØĞÎ¿í¶È
+    float m_height; // ¾ØĞÎ¸ß¶È
+
 public:
-    BoxCollider(float w, float h) : Collider(ColliderShape::Box), width(w), height(h) {}
+    // ¹¹Ôìº¯Êı£º´«Èë¾ØĞÎ³ß´ç
+    BoxCollider(float width, float height)
+        : Collider(ColliderShape::Box), m_width(width), m_height(height) {
+    }
 
-    void SetSize(float w, float h) { width = w; height = h; }
-    float GetWidth() const { return width; }
-    float GetHeight() const { return height; }
+    // ÊµÏÖÅö×²ÅĞ¶Ï£¨´¦Àí¾ØĞÎ-¾ØĞÎ¡¢¾ØĞÎ-Ô²ĞÎÅö×²£©
+    bool CollisionJudge(Collider* other) override {
+        if (!other || !GetOwner() || !other->GetOwner()) return false;
 
-    bool CollisionJudge(Collider* other) override; // å®ç°è§cpp
+        Vector2D posA = GetOwnerPosition();
+        Vector2D posB = other->GetOwnerPosition();
+
+        // ¾ØĞÎ vs ¾ØĞÎ
+        if (other->GetShape() == ColliderShape::Box) {
+            BoxCollider* boxOther = static_cast<BoxCollider*>(other);
+            // AABBÅö×²¼ì²â£ºÖá¶ÔÆë°üÎ§ºĞ
+            return (posA.x < posB.x + boxOther->m_width &&
+                posA.x + m_width > posB.x &&
+                posA.y < posB.y + boxOther->m_height &&
+                posA.y + m_height > posB.y);
+        }
+        // ¾ØĞÎ vs Ô²ĞÎ£¨´ËÊ±CircleColliderÒÑÍêÕû¶¨Òå£¬¿É°²È«×ª»»/·ÃÎÊ³ÉÔ±£©
+        else if (other->GetShape() == ColliderShape::Circle) {
+            CircleCollider* circleOther = static_cast<CircleCollider*>(other);
+            // ¼ÆËã¾ØĞÎµ½Ô²ĞÄµÄ×î½üµã
+            float closestX = std::clamp(posB.x, posA.x, posA.x + m_width);
+            float closestY = std::clamp(posB.y, posA.y, posA.y + m_height);
+            // ¼ÆËã×î½üµãµ½Ô²ĞÄµÄ¾àÀë
+            float dx = posB.x - closestX;
+            float dy = posB.y - closestY;
+            return (dx * dx + dy * dy) <= (circleOther->GetRadius() * circleOther->GetRadius());
+        }
+        return false;
+    }
+
+    // Getter
+    float GetWidth() const { return m_width; }
+    float GetHeight() const { return m_height; }
 };
-
