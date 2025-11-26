@@ -1,97 +1,93 @@
 #include "Zombie.h"
-#include "Plant.h"  // éœ€è¦ Plant::onAttacked()
+#include "Plant.h"
+#include <iostream>
 
-Zombie::Zombie(int x, int y, int width, int height,
-               float speed, int hp, int attackDamage, float attackInterval)
-    : Entity(x, y, width, height, true),
-      speed(speed), hp(hp),
-      attackDamage(attackDamage), attackInterval(attackInterval)
-{
+// ¹¹Ôìº¯Êı£º³õÊ¼»¯Object+×ÔÉíÊôĞÔ£¬Ìí¼ÓÅö×²Ìå
+Zombie::Zombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval)
+    : Object(objType), speed(speed), hp(hp), attackDamage(attackDamage), attackInterval(attackInterval) {
+    // Ìí¼Ó¾ØĞÎÅö×²Ìå£¨½©Ê¬³ß´ç60x80£©
+    AddComponent<BoxCollider>(60.0f, 80.0f);
 }
 
-void Zombie::update(float dt)
-{
-    if (!alive) return;
+void Zombie::Update(float dt) {
+    if (!IsAlive()) return; // ÓÃObjectµÄIsAlive()Ìæ´úalive³ÉÔ±
 
-    // ========= æ”»å‡»æ¨¡å¼ =========
-    if (isAttacking)
-    {
+    // ========= ¹¥»÷Ä£Ê½ =========
+    if (isAttacking) {
         attackTimer += dt;
-        if (attackTimer >= attackInterval)
-        {
+        if (attackTimer >= attackInterval) {
             attackTimer = 0;
-            onAttackPlant(); // ç›´æ¥æ”»å‡»æ¤ç‰©
+            onAttackPlant();
         }
-        return; // æ”»å‡»æ—¶ä¸ç§»åŠ¨
+        return; // ¹¥»÷Ê±²»ÒÆ¶¯
     }
 
-    // ========= ç§»åŠ¨ =========
-    x -= speed * dt;
+    // ========= ÒÆ¶¯£¨Í¨¹ıTransform×é¼ş£©=========
+    if (auto* trans = GetTransform()) {
+        Vector2D pos = trans->GetPosition();
+        pos.x -= speed * dt; // Ïò×óÒÆ¶¯
+        trans->SetPosition(pos.x, pos.y);
 
-    // ========= åˆ°æœ€å·¦è¾¹ï¼šå¤±è´¥åˆ¤å®š =========
-    if (x < -50)    //å…ˆå‡è®¾åƒµå°¸çŸ©å½¢å®½åº¦ä¸º50
-    {
-        alive = false;
-        onReachEnd();
+        // ========= µ½×î×ó±ß£ºÊ§°ÜÅĞ¶¨ =========
+        if (pos.x < -60) { // ½©Ê¬¿í¶È60£¬ÍêÈ«³ö×ó±ß½ç
+            Destroy(); // ÓÃObjectµÄDestroy()±ê¼ÇËÀÍö
+            onReachEnd();
+        }
+    }
+
+    // ========= Åö×²¼ì²â£ºÑ°ÕÒÇ°·½Ö²Îï =========
+    if (auto* collider = GetComponent<BoxCollider>()) {
+        // »ñÈ¡Åö×²µÄÖ²Îï£¨Í¨¹ıColliderµÄÀàĞÍÉ¸Ñ¡£©
+        auto collidedPlants = collider->GetCollisionsByType("Plant");
+        if (!collidedPlants.empty() && !targetPlant) {
+            targetPlant = dynamic_cast<Plant*>(collidedPlants[0]);
+            if (targetPlant) startAttack();
+        }
     }
 }
 
-void Zombie::onHit(int damage)
-{
-    if (!alive) return;
+void Zombie::onHit(int damage) {
+    if (!IsAlive()) return;
 
     hp -= damage;
-    if (hp <= 0)
-    {
+    if (hp <= 0) {
         hp = 0;
         die();
     }
 }
 
-void Zombie::onAttackPlant()
-{
-    if (!targetPlant) return;
-
-    // å¦‚æœæ¤ç‰©æ­»äº†ï¼Œåœæ­¢æ”»å‡»
-    if (targetPlant->is_dead())
-    {
+void Zombie::onAttackPlant() {
+    if (!targetPlant || targetPlant->is_dead()) {
         stopAttack();
         targetPlant = nullptr;
         return;
     }
 
-    // ç›´æ¥æ”»å‡»æ¤ç‰©ï¼ˆä¸éœ€è¦ LevelSceneï¼‰
-    targetPlant->onAttacked(attackDamage);
+    targetPlant->onAttacked(attackDamage); // µ÷ÓÃPlantµÄÊÜ¹¥»÷·½·¨
 }
 
-void Zombie::startAttack()
-{
+void Zombie::startAttack() {
     isAttacking = true;
     attackTimer = 0;
 }
 
-void Zombie::stopAttack()
-{
+void Zombie::stopAttack() {
     isAttacking = false;
 }
 
-void Zombie::die()
-{
-    alive = false;
-    // å¯æ‰©å±•æ­»äº¡åŠ¨ç”»ã€éŸ³æ•ˆ
+void Zombie::die() {
+    Destroy(); // ±ê¼ÇÎªËÀÍö
+    std::cout << "A zombie has been defeated!" << '\n';
 }
 
-void Zombie::onReachEnd()
-{
-    // å¯è®¾ç½®ä¸€ä¸ªæ ‡å¿—è®©æ¸¸æˆç»“æŸ
+void Zombie::onReachEnd() {
+    std::cout << "Zombie reached the end! Game Over!" << '\n';
 }
 
-void Zombie::setTargetPlant(Plant* plant)
-{
+void Zombie::setTargetPlant(Plant* plant) {
     targetPlant = plant;
 }
 
-Plant* Zombie::getTargetPlant() const
-{
+Plant* Zombie::getTargetPlant() const {
     return targetPlant;
 }
