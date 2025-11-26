@@ -2,16 +2,17 @@
 #include "Zombie.h"
 #include <graphics.h>
 
-// NormalZombie ç±»ç»§æ‰¿è‡ª Zombie
-class NormalZombie : public Zombie
-{
-private:
-    IMAGE normalZombieImage;  // ç”¨äºç»˜åˆ¶æ­£å¸¸åƒµå°¸çš„å›¾åƒ
+// È«¾ÖÍ¼Æ¬×ÊÔ´£¨±ÜÃâÃ¿¸ö½©Ê¬¶ÔÏóÖØ¸´¼ÓÔØ£©
+extern IMAGE g_normalZombieImage;
 
+class NormalZombie : public Zombie {
 public:
-    NormalZombie(int x, int y);
-    virtual ~NormalZombie();
+    // ¹¹Ôìº¯Êı£ºÊÊÅäZombieµÄObject¼Ü¹¹²ÎÊı
+    NormalZombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval);
 
-    // é‡å†™ç»˜åˆ¶å‡½æ•°
-    void draw() override;
+    // Îö¹¹º¯Êı£¨ÎŞĞè¶îÍâÇåÀí£¬Í¼Æ¬ÎªÈ«¾Ö×ÊÔ´£©
+    ~NormalZombie() override = default;
+
+    // ÖØĞ´»æÖÆĞéº¯Êı
+    void draw() const override;
 };
