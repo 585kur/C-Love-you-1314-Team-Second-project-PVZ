@@ -1,62 +1,42 @@
-#include<iostream>
-#include<vector>
-#include"Scene.h"
-#include"Plant.h"
-#include"Zombie.h"
+#pragma once
+#include "Scene.h"
+#include "Object.h"
+#include "Sprite.h"
+#include <vector>
+#include <memory>
+#include <graphics.h>
+#include <string>
 
-using namespace std;
+class LevelScene : public Scene {
+private:
+    struct Cell {
+        int plantCount = 0;
+        bool CanPlant() const { return plantCount == 0; }
+    };
 
-class LevelScene :public Scene {
+    std::vector<std::unique_ptr<Object>> plants;
+    std::vector<std::unique_ptr<Object>> zombies;
+    std::vector<std::unique_ptr<Object>> projectiles;
+    std::vector<std::unique_ptr<Object>> suns;
+
+    Cell grid[5][9];
+    int sunshine = 50;
+    float zombieSpawnTimer = 0;
+
 public:
-	class cell {
-		//网格上植物数量
-		int PlantNum = 0;
-		//可种植判断
-		bool AblePlant();
-	};
-	//存储植物
-	cell* plantarray[5][9] = { nullptr };
+    LevelScene(const std::string& name) : Scene(name) {
+        plants.reserve(45);
+        zombies.reserve(50);
+        projectiles.reserve(200);
+        suns.reserve(30);
+    }
 
-	//植物容器
-	vector<Plant> plantVector;
-	plantVector.reserve(45);
-	//僵尸容器
-	vector<Zombie> zombieVector;
-	//场上僵尸数量上限
-	zombieVector.reserve(50);
-	//子弹容器
-	vector<Bullet> bulletVector;
-	bulletVector.reserve(200);
-//上面三个容器的第二行代码，容器名报错“此声明没有存储类或类型说明符”
+    // 重写基类虚函数
+    void eventTick(float dt) override;
+    void drawTick() override;
 
-
-
-	//阳光容器
-	int Allsunshine=50;
-	//初始化植物存储数组
-	
-	
-protected:
-	//阳光计数器
-	void SunshineCounter();
-	//僵尸计数器
-	void ZombieCounter();
-
-	//暂停
-	void Pause();
-	
-		
+    void AddSunshine(int amount) { sunshine += amount; }
+    void SpawnZombie(int row);
+    bool PlantOnGrid(int row, int col, const std::string& plantType);
+    void Pause() { /* 实现暂停 */ }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
