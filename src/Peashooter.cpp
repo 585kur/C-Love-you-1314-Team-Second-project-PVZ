@@ -1,39 +1,41 @@
 // Peashooter.cpp
 #include "Peashooter.h"
+#include "Transform.h"
 #include <graphics.h>
 #include <iostream>
 
-Peashooter::Peashooter(int x, int y)
-    : Plant(PlantType::PEASHOOTER, x, y, 50, 50, 100, 100), // 豌豆射手：100阳光
-    damage(25),
-    fire_cooldown(120), // 120帧发射一次
-    current_cooldown(0)
-{
-}
-
-// 绘制豌豆射手
+// 实现draw纯虚函数
 void Peashooter::draw() const {
     if (is_dead()) return;
 
-    // 绘制豌豆射手主体 (绿色矩形)
+    // 获取Transform
+     const Transform* trans = GetTransform();
+    // trans = GetTransform();
+    if (!trans) return;
+    float x = trans->GetPosition().x;
+    float y = trans->GetPosition().y;
+    int width = 50, height = 50; // 豌豆射手尺寸
+
+    // 绘制主体
     setfillcolor(GREEN);
-    solidrectangle(x, y, x + width - 1, y + height - 1);
+    solidrectangle(static_cast<int>(x), static_cast<int>(y),
+        static_cast<int>(x + width), static_cast<int>(y + height));
 
-    // 绘制豌豆射手的“炮管” (深绿色矩形)
-    setfillcolor(DARKGREEN);
-    solidrectangle(x + width - 5, y + 15, x + width + 10, y + 35);
+    // 绘制炮管
+    setfillcolor(RGB(0, 100, 0)); // 深绿色
+    solidrectangle(static_cast<int>(x + width - 5), static_cast<int>(y + 15),
+        static_cast<int>(x + width + 10), static_cast<int>(y + 35));
 
-    // 绘制生命值条
-    // 背景 (红色)
+    // 绘制血条
     setfillcolor(RED);
-    solidrectangle(x, y - 10, x + width, y - 6);
-    // 当前生命值 (绿色)
+    solidrectangle(static_cast<int>(x), static_cast<int>(y - 10),
+        static_cast<int>(x + width), static_cast<int>(y - 6));
     float health_ratio = static_cast<float>(get_health()) / get_max_health();
     setfillcolor(GREEN);
-    solidrectangle(x, y - 10, x + static_cast<int>(width * health_ratio), y - 6);
+    solidrectangle(static_cast<int>(x), static_cast<int>(y - 10),
+        static_cast<int>(x + width * health_ratio), static_cast<int>(y - 6));
 }
 
-// 更新豌豆射手状态
 void Peashooter::update() {
     if (is_dead()) return;
 
@@ -46,8 +48,9 @@ void Peashooter::update() {
     }
 }
 
-// 发射豌豆
 void Peashooter::shoot() {
-    std::cout << "Peashooter at (" << x << "," << y << ") shoots a pea! Damage: " << damage << std::endl;
-    // 在这里创建一个 Bullet 实体并添加到游戏世界中
+    auto trans = GetTransform();
+    if (!trans) return;
+    std::cout << "Peashooter at (" << trans->GetPosition().x << ","
+        << trans->GetPosition().y << ") shoots a pea!" << std::endl;
 }
