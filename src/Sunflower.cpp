@@ -1,4 +1,3 @@
-// Sunflower.cpp
 #include "Sunflower.h"
 #include <graphics.h>
 #include <iostream>
