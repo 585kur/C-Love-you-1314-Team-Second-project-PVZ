@@ -1,48 +1,56 @@
 #pragma once
-#include "Entity.h"
+#include "Object.h"   // ¼Ì³ÐObject¶ø·ÇEntity
+#include "Collider.h" // Ìí¼ÓÅö×²×é¼þ
+#include <memory>
 
-// å‰å‘å£°æ˜Žï¼ˆé¿å…å¾ªçŽ¯åŒ…å«ï¼‰
+// Ç°ÏòÉùÃ÷
 class Plant;
 
-class Zombie : public Entity
-{
+class Zombie : public Object {
 protected:
-    float speed;              // ç§»åŠ¨é€Ÿåº¦ï¼ˆåƒç´ /ç§’ï¼‰
-    int hp;                   // è¡€é‡
-    int attackDamage;         // æ¯æ¬¡æ”»å‡»ä¼¤å®³
-    float attackInterval;     // æ”»å‡»é—´éš”ï¼ˆç§’ï¼‰
-    float attackTimer = 0;    // æ”»å‡»è®¡æ—¶å™¨
+    float speed;              // ÒÆ¶¯ËÙ¶È£¨ÏñËØ/Ãë£©
+    int hp;                   // ÑªÁ¿
+    int attackDamage;         // Ã¿´Î¹¥»÷ÉËº¦
+    float attackInterval;     // ¹¥»÷¼ä¸ô£¨Ãë£©
+    float attackTimer = 0;    // ¹¥»÷¼ÆÊ±Æ÷
 
-    bool isAttacking = false; // æ˜¯å¦æ­£åœ¨æ”»å‡»
-    Plant* targetPlant = nullptr; // å½“å‰æ”»å‡»ç›®æ ‡
+    bool isAttacking = false; // ÊÇ·ñÕýÔÚ¹¥»÷
+    Plant* targetPlant = nullptr; // µ±Ç°¹¥»÷Ä¿±ê
 
 public:
-    Zombie(int x, int y, int width, int height,
-           float speed, int hp, int attackDamage, float attackInterval);
+    // ¹¹Ôìº¯Êý£ºÍ¨¹ýObjectµÄÀàÐÍ±êÊ¶+×é¼þ¹ÜÀíÎ»ÖÃ³ß´ç
+    virtual void draw() const = 0;
+    Zombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval);
 
-    virtual ~Zombie() {}
+    virtual ~Zombie() = default;
 
-    // æ¯å¸§é€»è¾‘æ›´æ–°
-    virtual void update(float dt);
+    // Ã¿Ö¡Âß¼­¸üÐÂ£¨ÖØÐ´ObjectµÄUpdate£©
+    void Update(float dt) override;
 
-    // è¢«å­å¼¹å‡»ä¸­
+    // ±»×Óµ¯»÷ÖÐ
     virtual void onHit(int damage);
 
-    // æ”»å‡»æ¤ç‰©ï¼ˆä»Ž update ä¸­è§¦å‘ï¼‰
+    // ¹¥»÷Ö²Îï
     virtual void onAttackPlant();
 
-    // æ­»äº¡å¤„ç†
+    // ËÀÍö´¦Àí
     virtual void die();
 
-    // åˆ°è¾¾å·¦è¾¹å°½å¤´ï¼ˆçŽ©å®¶å¤±è´¥ï¼‰â€”â€” å¯ç•™ç©º
+    // µ½´ï×ó±ß¾¡Í·£¨Íæ¼ÒÊ§°Ü£©
     virtual void onReachEnd();
 
-    // æˆ˜æ–—æŽ§åˆ¶
+    // Õ½¶·¿ØÖÆ
     void startAttack();
     void stopAttack();
 
-    // ç›®æ ‡æ¤ç‰©
+    // Ä¿±êÖ²Îï
     void setTargetPlant(Plant* plant);
     Plant* getTargetPlant() const;
 
+    // ¿ì½ÝÉèÖÃÎ»ÖÃ£¨Í¨¹ýTransform×é¼þ£©
+    void SetPosition(float x, float y) {
+        if (auto* trans = GetTransform()) {
+            trans->SetPosition(x, y);
+        }
+    }
 };
