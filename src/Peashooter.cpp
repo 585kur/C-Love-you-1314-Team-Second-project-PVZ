@@ -1,20 +1,23 @@
-// Peashooter.cpp
 #include "Peashooter.h"
 #include "Transform.h"
 #include <graphics.h>
 #include <iostream>
 
-// 实现draw纯虚函数
+// 构造函数：接收objType、type、health、cost，调用Plant基类构造
+Peashooter::Peashooter(const std::string& objType, PlantType type, int health, int cost)
+    : Plant(objType, type, health, cost) { // 直接传递参数给Plant基类
+    // 位置由LevelScene通过SetPosition设置，此处无需处理
+}
+
+// 绘制豌豆射手（保持不变）
 void Peashooter::draw() const {
     if (is_dead()) return;
 
-    // 获取Transform
-     const Transform* trans = GetTransform();
-    // trans = GetTransform();
+    const Transform* trans = GetTransform();
     if (!trans) return;
     float x = trans->GetPosition().x;
     float y = trans->GetPosition().y;
-    int width = 50, height = 50; // 豌豆射手尺寸
+    int width = 50, height = 50;
 
     // 绘制主体
     setfillcolor(GREEN);
@@ -22,7 +25,7 @@ void Peashooter::draw() const {
         static_cast<int>(x + width), static_cast<int>(y + height));
 
     // 绘制炮管
-    setfillcolor(RGB(0, 100, 0)); // 深绿色
+    setfillcolor(RGB(0, 100, 0));
     solidrectangle(static_cast<int>(x + width - 5), static_cast<int>(y + 15),
         static_cast<int>(x + width + 10), static_cast<int>(y + 35));
 
@@ -36,6 +39,7 @@ void Peashooter::draw() const {
         static_cast<int>(x + width * health_ratio), static_cast<int>(y - 6));
 }
 
+// 更新逻辑（保持不变）
 void Peashooter::update() {
     if (is_dead()) return;
 
@@ -49,8 +53,8 @@ void Peashooter::update() {
 }
 
 void Peashooter::shoot() {
-    auto trans = GetTransform();
+    const Transform* trans = GetTransform();
     if (!trans) return;
     std::cout << "Peashooter at (" << trans->GetPosition().x << ","
-        << trans->GetPosition().y << ") shoots a pea!" << std::endl;
+        << trans->GetPosition().y << ") shoots pea!" << std::endl;
 }
