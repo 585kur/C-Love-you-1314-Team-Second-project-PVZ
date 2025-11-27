@@ -6,6 +6,8 @@
 #include <vector>
 #include "World.h"
 #include "Object.h" 
+#include<algorithm>
+#include<iostream>
 
 class Collider : public Component {
 public:
