@@ -1,5 +1,5 @@
 #pragma once
-#include "Scene.h"
+#include "scene.h"
 #include "Object.h"
 #include "ObjectManager.h" 
 #include "Plant.h"         
@@ -14,24 +14,24 @@ private:
         bool CanPlant() const { return plantCount == 0; }
     };
 
-    ObjectManager objMgr;   // ĞÂÔö£º¶ÔÏó¹ÜÀíÆ÷£¨¹ÜÀíËùÓĞÓÎÏ·¶ÔÏó£©
-    Cell grid[5][9];        // ÖÖÖ²Íø¸ñ
-    int sunshine = 50;      // µ±Ç°Ñô¹â
-    float zombieSpawnTimer = 0; // ½©Ê¬Éú³É¼ÆÊ±Æ÷
+    ObjectManager objMgr;   // æ–°å¢ï¼šå¯¹è±¡ç®¡ç†å™¨ï¼ˆç®¡ç†æ‰€æœ‰æ¸¸æˆå¯¹è±¡ï¼‰
+    Cell grid[5][9];        // ç§æ¤ç½‘æ ¼
+    int sunshine = 50;      // å½“å‰é˜³å…‰
+    float zombieSpawnTimer = 0; // åƒµå°¸ç”Ÿæˆè®¡æ—¶å™¨
 
-    // ĞÂÔö£ºÌá¹©¶ÔÏó¹ÜÀíÆ÷µÄ·ÃÎÊ·½·¨
+    // æ–°å¢ï¼šæä¾›å¯¹è±¡ç®¡ç†å™¨çš„è®¿é—®æ–¹æ³•
     ObjectManager* GetObjectManager() { return &objMgr; }
 
 public:
     LevelScene(const std::string& name) : Scene(name) {}
 
-    // ÖØĞ´»ùÀàĞéº¯Êı£¨±ØĞëÊµÏÖ£©
+    // é‡å†™åŸºç±»è™šå‡½æ•°ï¼ˆå¿…é¡»å®ç°ï¼‰
     void eventTick(float dt) override;
     void drawTick() override;
 
-    // ×Ô¶¨Òå·½·¨
+    // è‡ªå®šä¹‰æ–¹æ³•
     void AddSunshine(int amount) { sunshine += amount; }
     void SpawnZombie(int row);
     bool PlantOnGrid(int row, int col, const std::string& plantType);
-    void Pause() { /* ºóĞø¿É²¹³äÔİÍ£Âß¼­ */ }
+    void Pause() { /* åç»­å¯è¡¥å……æš‚åœé€»è¾‘ */ }
 };

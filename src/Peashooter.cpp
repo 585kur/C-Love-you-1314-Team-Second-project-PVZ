@@ -3,13 +3,13 @@
 #include <graphics.h>
 #include <iostream>
 
-// ¹¹Ôìº¯Êı£º½ÓÊÕobjType¡¢type¡¢health¡¢cost£¬µ÷ÓÃPlant»ùÀà¹¹Ôì
+// æ„é€ å‡½æ•°ï¼šæ¥æ”¶objTypeã€typeã€healthã€costï¼Œè°ƒç”¨PlantåŸºç±»æ„é€ 
 Peashooter::Peashooter(const std::string& objType, PlantType type, int health, int cost)
-    : Plant(objType, type, health, cost) { // Ö±½Ó´«µİ²ÎÊı¸øPlant»ùÀà
-    // Î»ÖÃÓÉLevelSceneÍ¨¹ıSetPositionÉèÖÃ£¬´Ë´¦ÎŞĞè´¦Àí
+    : Plant(objType, type, health, cost) { // ç›´æ¥ä¼ é€’å‚æ•°ç»™PlantåŸºç±»
+    // ä½ç½®ç”±LevelSceneé€šè¿‡SetPositionè®¾ç½®ï¼Œæ­¤å¤„æ— éœ€å¤„ç†
 }
 
-// »æÖÆÍã¶¹ÉäÊÖ£¨±£³Ö²»±ä£©
+// ç»˜åˆ¶è±Œè±†å°„æ‰‹ï¼ˆä¿æŒä¸å˜ï¼‰
 void Peashooter::draw() const {
     if (is_dead()) return;
 
@@ -19,17 +19,17 @@ void Peashooter::draw() const {
     float y = trans->GetPosition().y;
     int width = 50, height = 50;
 
-    // »æÖÆÖ÷Ìå
-    setfillcolor(GREEN);
-    solidrectangle(static_cast<int>(x), static_cast<int>(y),
-        static_cast<int>(x + width), static_cast<int>(y + height));
+void Peashooter::Update(float dt) {
+    if (current_cooldown > 0.0f) {
+        current_cooldown -= dt;
+    if (current_cooldown <= 0.0f) {
 
-    // »æÖÆÅÚ¹Ü
+    // ç»˜åˆ¶ç‚®ç®¡
     setfillcolor(RGB(0, 100, 0));
     solidrectangle(static_cast<int>(x + width - 5), static_cast<int>(y + 15),
         static_cast<int>(x + width + 10), static_cast<int>(y + 35));
 
-    // »æÖÆÑªÌõ
+    // ç»˜åˆ¶è¡€æ¡
     setfillcolor(RED);
     solidrectangle(static_cast<int>(x), static_cast<int>(y - 10),
         static_cast<int>(x + width), static_cast<int>(y - 6));
@@ -39,7 +39,7 @@ void Peashooter::draw() const {
         static_cast<int>(x + width * health_ratio), static_cast<int>(y - 6));
 }
 
-// ¸üĞÂÂß¼­£¨±£³Ö²»±ä£©
+// æ›´æ–°é€»è¾‘ï¼ˆä¿æŒä¸å˜ï¼‰
 void Peashooter::update() {
     if (is_dead()) return;
 

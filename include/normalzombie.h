@@ -1,18 +1,18 @@
 #pragma once
-#include "Zombie.h"
+#include "zombie.h"
 #include <graphics.h>
 
-// È«¾ÖÍ¼Æ¬×ÊÔ´£¨±ÜÃâÃ¿¸ö½©Ê¬¶ÔÏóÖØ¸´¼ÓÔØ£©
+// å…¨å±€å›¾ç‰‡èµ„æºï¼ˆé¿å…æ¯ä¸ªåƒµå°¸å¯¹è±¡é‡å¤åŠ è½½ï¼‰
 extern IMAGE g_normalZombieImage;
 
 class NormalZombie : public Zombie {
 public:
-    // ¹¹Ôìº¯Êı£ºÊÊÅäZombieµÄObject¼Ü¹¹²ÎÊı
+    // æ„é€ å‡½æ•°ï¼šé€‚é…Zombieçš„Objectæ¶æ„å‚æ•°
     NormalZombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval);
 
-    // Îö¹¹º¯Êı£¨ÎŞĞè¶îÍâÇåÀí£¬Í¼Æ¬ÎªÈ«¾Ö×ÊÔ´£©
+    // ææ„å‡½æ•°ï¼ˆæ— éœ€é¢å¤–æ¸…ç†ï¼Œå›¾ç‰‡ä¸ºå…¨å±€èµ„æºï¼‰
     ~NormalZombie() override = default;
 
-    // ÖØĞ´»æÖÆĞéº¯Êı
+    // é‡å†™ç»˜åˆ¶è™šå‡½æ•°
     void draw() const override;
 };

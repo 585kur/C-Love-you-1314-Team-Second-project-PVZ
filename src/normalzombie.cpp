@@ -1,25 +1,25 @@
-#include "NormalZombie.h"
-#include "Transform.h" // ÓÃÓÚ»ñÈ¡Î»ÖÃ
+#include "normalzombie.h"
+#include "Transform.h" // ç”¨äºè·å–ä½ç½®
 
-// È«¾ÖÍ¼Æ¬³õÊ¼»¯£¨½ö¼ÓÔØÒ»´Î£©
+// å…¨å±€å›¾ç‰‡åˆå§‹åŒ–ï¼ˆä»…åŠ è½½ä¸€æ¬¡ï¼‰
 IMAGE g_normalZombieImage;
 
-// ¹¹Ôìº¯Êı£ºµ÷ÓÃZombieµÄObject¼Ü¹¹¹¹Ôìº¯Êı
+// æ„é€ å‡½æ•°ï¼šè°ƒç”¨Zombieçš„Objectæ¶æ„æ„é€ å‡½æ•°
 NormalZombie::NormalZombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval)
     : Zombie(objType, speed, hp, attackDamage, attackInterval) {
-    // ³õÊ¼»¯½©Ê¬Î»ÖÃ£¨Í¨¹ıTransform×é¼ş£©
-    GetTransform()->SetPosition(800.0f, 200.0f); // Ä¬ÈÏÉú³ÉÔÚÆÁÄ»ÓÒ²à
+    // åˆå§‹åŒ–åƒµå°¸ä½ç½®ï¼ˆé€šè¿‡Transformç»„ä»¶ï¼‰
+    GetTransform()->SetPosition(800.0f, 200.0f); // é»˜è®¤ç”Ÿæˆåœ¨å±å¹•å³ä¾§
 }
 
-// »æÖÆ½©Ê¬£ºÍ¨¹ıTransform»ñÈ¡Î»ÖÃ
+// ç»˜åˆ¶åƒµå°¸ï¼šé€šè¿‡Transformè·å–ä½ç½®
 void NormalZombie::draw() const {
-    if (!IsAlive()) return; // ËÀÍö²»»æÖÆ
+    if (!IsAlive()) return; // æ­»äº¡ä¸ç»˜åˆ¶
 
-    // »ñÈ¡Transform×é¼şµÄÎ»ÖÃ
+    // è·å–Transformç»„ä»¶çš„ä½ç½®
     Transform* trans = const_cast<NormalZombie*>(this)->GetTransform();
     if (!trans) return;
 
     Vector2D pos = trans->GetPosition();
-    // »æÖÆÈ«¾ÖÍ¼Æ¬×ÊÔ´
+    // ç»˜åˆ¶å…¨å±€å›¾ç‰‡èµ„æº
     putimage(static_cast<int>(pos.x), static_cast<int>(pos.y), &g_normalZombieImage);
 }

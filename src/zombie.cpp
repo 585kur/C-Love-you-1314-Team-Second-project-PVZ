@@ -1,43 +1,43 @@
-#include "Zombie.h"
+#include "zombie.h"
 #include "Plant.h"
 #include <iostream>
 
-// ¹¹Ôìº¯Êı£º³õÊ¼»¯Object+×ÔÉíÊôĞÔ£¬Ìí¼ÓÅö×²Ìå
+// æ„é€ å‡½æ•°ï¼šåˆå§‹åŒ–Object+è‡ªèº«å±æ€§ï¼Œæ·»åŠ ç¢°æ’ä½“
 Zombie::Zombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval)
     : Object(objType), speed(speed), hp(hp), attackDamage(attackDamage), attackInterval(attackInterval) {
-    // Ìí¼Ó¾ØĞÎÅö×²Ìå£¨½©Ê¬³ß´ç60x80£©
+    // æ·»åŠ çŸ©å½¢ç¢°æ’ä½“ï¼ˆåƒµå°¸å°ºå¯¸60x80ï¼‰
     AddComponent<BoxCollider>(60.0f, 80.0f);
 }
 
 void Zombie::Update(float dt) {
-    if (!IsAlive()) return; // ÓÃObjectµÄIsAlive()Ìæ´úalive³ÉÔ±
+    if (!IsAlive()) return; // ç”¨Objectçš„IsAlive()æ›¿ä»£aliveæˆå‘˜
 
-    // ========= ¹¥»÷Ä£Ê½ =========
+    // ========= æ”»å‡»æ¨¡å¼ =========
     if (isAttacking) {
         attackTimer += dt;
         if (attackTimer >= attackInterval) {
             attackTimer = 0;
             onAttackPlant();
         }
-        return; // ¹¥»÷Ê±²»ÒÆ¶¯
+        return; // æ”»å‡»æ—¶ä¸ç§»åŠ¨
     }
 
-    // ========= ÒÆ¶¯£¨Í¨¹ıTransform×é¼ş£©=========
+    // ========= ç§»åŠ¨ï¼ˆé€šè¿‡Transformç»„ä»¶ï¼‰=========
     if (auto* trans = GetTransform()) {
         Vector2D pos = trans->GetPosition();
-        pos.x -= speed * dt; // Ïò×óÒÆ¶¯
+        pos.x -= speed * dt; // å‘å·¦ç§»åŠ¨
         trans->SetPosition(pos.x, pos.y);
 
-        // ========= µ½×î×ó±ß£ºÊ§°ÜÅĞ¶¨ =========
-        if (pos.x < -60) { // ½©Ê¬¿í¶È60£¬ÍêÈ«³ö×ó±ß½ç
-            Destroy(); // ÓÃObjectµÄDestroy()±ê¼ÇËÀÍö
+        // ========= åˆ°æœ€å·¦è¾¹ï¼šå¤±è´¥åˆ¤å®š =========
+        if (pos.x < -60) { // åƒµå°¸å®½åº¦60ï¼Œå®Œå…¨å‡ºå·¦è¾¹ç•Œ
+            Destroy(); // ç”¨Objectçš„Destroy()æ ‡è®°æ­»äº¡
             onReachEnd();
         }
     }
 
-    // ========= Åö×²¼ì²â£ºÑ°ÕÒÇ°·½Ö²Îï =========
+    // ========= ç¢°æ’æ£€æµ‹ï¼šå¯»æ‰¾å‰æ–¹æ¤ç‰© =========
     if (auto* collider = GetComponent<BoxCollider>()) {
-        // »ñÈ¡Åö×²µÄÖ²Îï£¨Í¨¹ıColliderµÄÀàĞÍÉ¸Ñ¡£©
+        // è·å–ç¢°æ’çš„æ¤ç‰©ï¼ˆé€šè¿‡Colliderçš„ç±»å‹ç­›é€‰ï¼‰
         auto collidedPlants = collider->GetCollisionsByType("Plant");
         if (!collidedPlants.empty() && !targetPlant) {
             targetPlant = dynamic_cast<Plant*>(collidedPlants[0]);
@@ -63,7 +63,7 @@ void Zombie::onAttackPlant() {
         return;
     }
 
-    targetPlant->onAttacked(attackDamage); // µ÷ÓÃPlantµÄÊÜ¹¥»÷·½·¨
+    targetPlant->onAttacked(attackDamage); // è°ƒç”¨Plantçš„å—æ”»å‡»æ–¹æ³•
 }
 
 void Zombie::startAttack() {
@@ -76,7 +76,7 @@ void Zombie::stopAttack() {
 }
 
 void Zombie::die() {
-    Destroy(); // ±ê¼ÇÎªËÀÍö
+    Destroy(); // æ ‡è®°ä¸ºæ­»äº¡
     std::cout << "A zombie has been defeated!" << '\n';
 }
 

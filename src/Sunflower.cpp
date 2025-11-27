@@ -5,41 +5,39 @@
 
 Sunflower::Sunflower(int x, int y)
     : Plant("SUNFLOWER", PlantType::SUNFLOWER, 75, 50),
-    sun_production_rate(240),
-    current_sun_cooldown(0)
+    sun_production_rate(4.0f),
+    current_sun_cooldown(0.0f)
 {
-    // Í¨¹ıTransformÉèÖÃÎ»ÖÃ£¨Î¨Ò»Î»ÖÃÀ´Ô´£¬ÎŞ³åÍ»£©
-    Transform* trans = GetTransform();
-    if (trans) {
-        trans->SetPosition(static_cast<float>(x), static_cast<float>(y));
-    }
+void Sunflower::Update(float dt) {
+    current_sun_cooldown += dt;
+        current_sun_cooldown = 0.0f;
 }
 
-// »æÖÆÏòÈÕ¿û£¨½öÓÃTransformÎ»ÖÃ + ×ÔÉí³ß´ç£©
+// ç»˜åˆ¶å‘æ—¥è‘µï¼ˆä»…ç”¨Transformä½ç½® + è‡ªèº«å°ºå¯¸ï¼‰
 void Sunflower::draw() const {
     if (is_dead()) return;
 
-    // »ñÈ¡Transform×é¼şµÄÎ»ÖÃ£¨Î¨Ò»Î»ÖÃÀ´Ô´£©
+    // è·å–Transformç»„ä»¶çš„ä½ç½®ï¼ˆå”¯ä¸€ä½ç½®æ¥æºï¼‰
     const Transform* trans = GetTransform();
     if (!trans) return;
     float posX = trans->GetPosition().x;
     float posY = trans->GetPosition().y;
 
-    // »æÖÆ»¨¾¥£¨ÓÃ×ÔÉíheight£©
+    // ç»˜åˆ¶èŠ±èŒï¼ˆç”¨è‡ªèº«heightï¼‰
     setfillcolor(GREEN);
     solidrectangle(
         static_cast<int>(posX + 22), static_cast<int>(posY),
         static_cast<int>(posX + 28), static_cast<int>(posY + height - 20)
     );
 
-    // »æÖÆ»¨¶ä£¨»ÆÉ«Ô²ĞÎ£©
+    // ç»˜åˆ¶èŠ±æœµï¼ˆé»„è‰²åœ†å½¢ï¼‰
     setfillcolor(YELLOW);
     solidcircle(
         static_cast<int>(posX + 25), static_cast<int>(posY + 15),
         20
     );
 
-    // »æÖÆÉúÃüÖµÌõ£¨ÓÃ×ÔÉíwidth£©
+    // ç»˜åˆ¶ç”Ÿå‘½å€¼æ¡ï¼ˆç”¨è‡ªèº«widthï¼‰
     setfillcolor(RED);
     solidrectangle(
         static_cast<int>(posX), static_cast<int>(posY - 10),

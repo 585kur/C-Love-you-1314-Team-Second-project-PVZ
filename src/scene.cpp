@@ -1,15 +1,15 @@
-#include "Scene.h"
+#include "scene.h"
 #include "World.h"
 #include "ObjectManager.h"
 #include "Object.h" 
 #include <graphics.h>
 
 
-// ¹¹Ôìº¯Êı£º³õÊ¼»¯³¡¾°Ãû³Æ
+// æ„é€ å‡½æ•°ï¼šåˆå§‹åŒ–åœºæ™¯åç§°
 //Scene::Scene() {}
 Scene::Scene(const std::string& name) : sceneName(name) {}
 
-// ĞéÎö¹¹º¯Êı
+// è™šææ„å‡½æ•°
 Scene::~Scene() {}
 
 //void Scene::eventTick(float dt) {
@@ -26,11 +26,11 @@ Scene::~Scene() {}
 //        setcolor(sceneWorld->GetBackgroundColor());
 //    }
 //    else {
-//        setcolor(WHITE); // Ä¬ÈÏ°×É«±³¾°
+//        setcolor(WHITE); // é»˜è®¤ç™½è‰²èƒŒæ™¯
 //    }
 //    cleardevice();
 //
-//    // 2. »ñÈ¡ËùÓĞ¶ÔÏó²¢»æÖÆËüÃÇ
+//    // 2. è·å–æ‰€æœ‰å¯¹è±¡å¹¶ç»˜åˆ¶å®ƒä»¬
 //    if (objMgr) {
 //        std::vector<Object*> allObjects = objMgr->GetAllObjects();
 //        for (Object* obj : allObjects) {

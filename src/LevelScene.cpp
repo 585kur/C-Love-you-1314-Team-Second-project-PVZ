@@ -1,24 +1,24 @@
 #include "LevelScene.h"
 #include "Peashooter.h"
-#include "NormalZombie.h"
+#include "normalzombie.h"
 #include "Transform.h"
 #include <cstdlib>
 #include <tchar.h>
 #include <iostream>
 
-// ÊµÏÖeventTick£¨¹Ø¿¨Âß¼­¸üĞÂ£©
+// å®ç°eventTickï¼ˆå…³å¡é€»è¾‘æ›´æ–°ï¼‰
 void LevelScene::eventTick(float dt) {
-    // 1. ¸üĞÂËùÓĞÓÎÏ·¶ÔÏó£¨Ö²Îï/½©Ê¬µÄAI¡¢ÀäÈ´µÈ£©
+    // 1. æ›´æ–°æ‰€æœ‰æ¸¸æˆå¯¹è±¡ï¼ˆæ¤ç‰©/åƒµå°¸çš„AIã€å†·å´ç­‰ï¼‰
     objMgr.UpdateAll(dt);
 
-    // 2. ½©Ê¬Éú³ÉÂß¼­£¨Ã¿5ÃëËæ»úÉú³É1¸ö£©
+    // 2. åƒµå°¸ç”Ÿæˆé€»è¾‘ï¼ˆæ¯5ç§’éšæœºç”Ÿæˆ1ä¸ªï¼‰
     zombieSpawnTimer += dt;
     if (zombieSpawnTimer >= 5.0f) {
-        SpawnZombie(rand() % 5); // 0-4ĞĞËæ»úÉú³É
+        SpawnZombie(rand() % 5); // 0-4è¡Œéšæœºç”Ÿæˆ
         zombieSpawnTimer = 0;
     }
 
-    // 3. ÊÕ¼¯ÏòÈÕ¿ûÉú²úµÄÑô¹â
+    // 3. æ”¶é›†å‘æ—¥è‘µç”Ÿäº§çš„é˜³å…‰
     auto sunflowers = objMgr.GetObjectsByType("SUNFLOWER");
     for (Object* obj : sunflowers) {
         Sunflower* sunflower = dynamic_cast<Sunflower*>(obj);
@@ -29,76 +29,76 @@ void LevelScene::eventTick(float dt) {
     }
 }
 
-// ÊµÏÖdrawTick£¨¹Ø¿¨»æÖÆ£©
+// å®ç°drawTickï¼ˆå…³å¡ç»˜åˆ¶ï¼‰
 void LevelScene::drawTick() {
-    // 1. Çå¿Õ»æÍ¼ÇøÓò£¨±³¾°ÉèÎª²İµØÉ«£©
+    // 1. æ¸…ç©ºç»˜å›¾åŒºåŸŸï¼ˆèƒŒæ™¯è®¾ä¸ºè‰åœ°è‰²ï¼‰
     setbkcolor(RGB(120, 200, 120));
     cleardevice();
 
-    // 2. »æÖÆËùÓĞÖ²Îï
+    // 2. ç»˜åˆ¶æ‰€æœ‰æ¤ç‰©
     auto plants = objMgr.GetObjectsByType("Plant");
     for (Object* obj : plants) {
         Plant* plant = dynamic_cast<Plant*>(obj);
         if (plant) plant->draw();
     }
 
-    // 3. »æÖÆËùÓĞ½©Ê¬
+    // 3. ç»˜åˆ¶æ‰€æœ‰åƒµå°¸
     auto zombies = objMgr.GetObjectsByType("Zombie");
     for (Object* obj : zombies) {
         NormalZombie* zombie = dynamic_cast<NormalZombie*>(obj);
         if (zombie) zombie->draw();
     }
 
-    // 4. »æÖÆÑô¹âUI
+    // 4. ç»˜åˆ¶é˜³å…‰UI
     settextcolor(YELLOW);
-    settextstyle(20, 0, _T("ËÎÌå"));
+    settextstyle(20, 0, _T("å®‹ä½“"));
     TCHAR sunText[20];
-    _stprintf_s(sunText, _T("Ñô¹â£º%d"), sunshine);
+    _stprintf_s(sunText, _T("é˜³å…‰ï¼š%d"), sunshine);
     outtextxy(10, 10, sunText);
 }
 
-// Éú³É½©Ê¬£¨ĞŞÕı£ºÆ¥ÅäNormalZombieµÄ¹¹Ôì²ÎÊı£©
+// ç”Ÿæˆåƒµå°¸ï¼ˆä¿®æ­£ï¼šåŒ¹é…NormalZombieçš„æ„é€ å‚æ•°ï¼‰
 void LevelScene::SpawnZombie(int row) {
-    // µ÷ÓÃNormalZombieµÄ¹¹Ôìº¯Êı£¨²ÎÊı£ºobjType¡¢speed¡¢hp¡¢attackDamage¡¢attackInterval£©
+    // è°ƒç”¨NormalZombieçš„æ„é€ å‡½æ•°ï¼ˆå‚æ•°ï¼šobjTypeã€speedã€hpã€attackDamageã€attackIntervalï¼‰
     auto zombie = GetObjectManager()->CreateObject<NormalZombie>(
-        "Zombie",        // ·Ö×éÃû£¨ObjectManagerÓÃ£©
-        "NormalZombie",  // ¹¹Ôì²ÎÊı1£ºobjType
-        1.0f,            // ¹¹Ôì²ÎÊı2£ºÒÆ¶¯ËÙ¶È
-        100,             // ¹¹Ôì²ÎÊı3£ºÉúÃüÖµ
-        10,              // ¹¹Ôì²ÎÊı4£º¹¥»÷Á¦
-        2.0f             // ¹¹Ôì²ÎÊı5£º¹¥»÷¼ä¸ô
+        "Zombie",        // åˆ†ç»„åï¼ˆObjectManagerç”¨ï¼‰
+        "NormalZombie",  // æ„é€ å‚æ•°1ï¼šobjType
+        1.0f,            // æ„é€ å‚æ•°2ï¼šç§»åŠ¨é€Ÿåº¦
+        100,             // æ„é€ å‚æ•°3ï¼šç”Ÿå‘½å€¼
+        10,              // æ„é€ å‚æ•°4ï¼šæ”»å‡»åŠ›
+        2.0f             // æ„é€ å‚æ•°5ï¼šæ”»å‡»é—´éš”
     );
 
     if (zombie) {
-        // ÉèÖÃ½©Ê¬³õÊ¼Î»ÖÃ£¨ÆÁÄ»ÓÒ²à£¬¶ÔÓ¦ĞĞ£©
+        // è®¾ç½®åƒµå°¸åˆå§‹ä½ç½®ï¼ˆå±å¹•å³ä¾§ï¼Œå¯¹åº”è¡Œï¼‰
         Transform* trans = zombie->GetTransform();
         trans->SetPosition(800.0f, 100.0f + row * 100.0f);
     }
 }
 
-// ÖÖÖ²Ö²Îï£¨ĞŞÕı£ºÆ¥ÅäPeashooterµÄ¹¹Ôì²ÎÊı£©
+// ç§æ¤æ¤ç‰©ï¼ˆä¿®æ­£ï¼šåŒ¹é…Peashooterçš„æ„é€ å‚æ•°ï¼‰
 bool LevelScene::PlantOnGrid(int row, int col, const std::string& plantType) {
-    // Ğ£Ñé£ºĞĞÁĞºÏ·¨¡¢Íø¸ñ¿ÉÖÖÖ²¡¢Ñô¹â×ã¹»
+    // æ ¡éªŒï¼šè¡Œåˆ—åˆæ³•ã€ç½‘æ ¼å¯ç§æ¤ã€é˜³å…‰è¶³å¤Ÿ
     if (row < 0 || row >= 5 || col < 0 || col >= 9 || !grid[row][col].CanPlant() || sunshine < 100) {
         return false;
     }
 
-    // µ÷ÓÃPeashooterµÄ¹¹Ôìº¯Êı£¨²ÎÊı£ºobjType¡¢PlantType¡¢health¡¢cost£©
+    // è°ƒç”¨Peashooterçš„æ„é€ å‡½æ•°ï¼ˆå‚æ•°ï¼šobjTypeã€PlantTypeã€healthã€costï¼‰
     auto plant = GetObjectManager()->CreateObject<Peashooter>(
-        "Plant",          // ·Ö×éÃû£¨ObjectManagerÓÃ£©
-        "Peashooter",     // ¹¹Ôì²ÎÊı1£ºobjType
-        PlantType::PEASHOOTER, // ¹¹Ôì²ÎÊı2£ºÖ²ÎïÀàĞÍ
-        100,              // ¹¹Ôì²ÎÊı3£ºÉúÃüÖµ
-        100               // ¹¹Ôì²ÎÊı4£ºÑô¹â³É±¾
+        "Plant",          // åˆ†ç»„åï¼ˆObjectManagerç”¨ï¼‰
+        "Peashooter",     // æ„é€ å‚æ•°1ï¼šobjType
+        PlantType::PEASHOOTER, // æ„é€ å‚æ•°2ï¼šæ¤ç‰©ç±»å‹
+        100,              // æ„é€ å‚æ•°3ï¼šç”Ÿå‘½å€¼
+        100               // æ„é€ å‚æ•°4ï¼šé˜³å…‰æˆæœ¬
     );
 
     if (plant) {
-        // ÉèÖÃÖ²ÎïÎ»ÖÃ£¨Íø¸ñ¶ÔÓ¦µÄ×ø±ê£©
+        // è®¾ç½®æ¤ç‰©ä½ç½®ï¼ˆç½‘æ ¼å¯¹åº”çš„åæ ‡ï¼‰
         Transform* trans = plant->GetTransform();
         trans->SetPosition(50.0f + col * 80.0f, 50.0f + row * 100.0f);
 
-        grid[row][col].plantCount++; // ±ê¼ÇÍø¸ñÒÑÖÖÖ²
-        sunshine -= 100; // ¿Û³ıÑô¹â
+        grid[row][col].plantCount++; // æ ‡è®°ç½‘æ ¼å·²ç§æ¤
+        sunshine -= 100; // æ‰£é™¤é˜³å…‰
         return true;
     }
     return false;
