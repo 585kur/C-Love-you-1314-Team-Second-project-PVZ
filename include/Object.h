@@ -7,12 +7,14 @@
 
 class Object {
 private:
+    // 【删除冗余成员】：Transform组件已管理位置/尺寸，无需重复定义x/y/height/width
     std::unordered_map<std::type_index, Component*> components;
     bool alive = true;
     std::string type;
+
 public:
     Object(const std::string& type) : type(type) {
-        AddComponent<Transform>();
+        AddComponent<Transform>(); // 依赖Transform管理位置/尺寸
     }
 
     ~Object() {
