@@ -1,25 +1,62 @@
-#pragma once 
+#include "ObjectManager.h"
 #include "Object.h"
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <memory>
 
-class ObjectManager {
-private:
-    // 成员变量声明（根据你的逻辑补充，比如你用到的allObjects、typeGroups）
-    std::vector<std::unique_ptr<Object>> allObjects;
-    std::unordered_map<std::string, std::vector<Object*>> typeGroups;
+// 获取所有存活对象
+std::vector<Object*> ObjectManager::GetAllObjects() {
+    std::vector<Object*> result;
+    for (auto& obj : allObjects) {
+        if (obj->IsAlive()) {
+            result.push_back(obj.get());
+        }
+    }
+    return result;
+}
 
-public:
-    // 仅保留函数声明（删除头文件中这些函数的{...}实现体）
-    void CleanupDestroyed();
+// 按类型获取存活对象
+std::vector<Object*> ObjectManager::GetObjectsByType(const std::string& type) {
+    std::vector<Object*> result;
+    auto it = typeGroups.find(type);
+    if (it != typeGroups.end()) {
+        for (Object* obj : it->second) {
+            if (obj && obj->IsAlive()) {
+                result.push_back(obj);
+            }
+        }
+    }
+    return result;
+}
 
-    void UpdateAll(float dt);
+// 标记对象销毁
+void ObjectManager::DestroyObject(Object* obj) {
+    if (!obj || !obj->IsAlive()) return;
+    obj->Destroy();
+}
 
-    std::vector<Object*> GetAllObjects();
+// 清理已销毁对象
+void ObjectManager::CleanupDestroyed() {
+    for (auto it = allObjects.begin(); it != allObjects.end();) {
+        if (!(*it)->IsAlive()) {
+            const std::string& type = (*it)->GetType();
+            auto& group = typeGroups[type];
+            group.erase(std::remove(group.begin(), group.end(), it->get()), group.end());
 
-    std::vector<Object*> GetObjectsByType(const std::string& type);
+            if (group.empty()) {
+                typeGroups.erase(type);
+            }
+            it = allObjects.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
 
-    void DestroyObject(Object* obj);
-};
+// 更新所有存活对象
+void ObjectManager::UpdateAll(float dt) {
+    for (auto& obj : allObjects) {
+        if (obj->IsAlive()) {
+            obj->Update(dt);
+        }
+    }
+    CleanupDestroyed();
+}
