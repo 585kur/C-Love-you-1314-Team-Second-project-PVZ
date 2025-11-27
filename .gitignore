@@ -116,9 +116,6 @@ fabric.properties
 *.vsidx
 .vs/
 *.suo
-*.sln
-*.vcxproj
-*.vcxproj.filters
 *.vcxproj.user
 *.aps*.ncb
 *.opensdf
