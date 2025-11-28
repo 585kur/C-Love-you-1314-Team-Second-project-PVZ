@@ -3,16 +3,12 @@
 #include <graphics.h>
 #include <iostream>
 
-Sunflower::Sunflower(int x, int y)
-    : Plant("SUNFLOWER", PlantType::SUNFLOWER, 75, 50),
+Sunflower::Sunflower(const std::string& objType, PlantType type, int health, int cost)
+    : Plant(objType, type, health, cost),
     sun_production_rate(240),
     current_sun_cooldown(0)
 {
-    // 通过Transform设置位置（唯一位置来源，无冲突）
-    Transform* trans = GetTransform();
-    if (trans) {
-        trans->SetPosition(static_cast<float>(x), static_cast<float>(y));
-    }
+  
 }
 
 // 绘制向日葵（仅用Transform位置 + 自身尺寸）
