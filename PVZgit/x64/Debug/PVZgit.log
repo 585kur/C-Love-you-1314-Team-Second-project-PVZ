@@ -1,0 +1,65 @@
+﻿  LevelScene.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\include\LevelScene.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“src/LevelScene.cpp”)
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\include\normalzombie.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“src/LevelScene.cpp”)
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(56,48): warning C4474: sprintf_s: 格式字符串中传递的参数太多
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(56,48):
+      占位符和其参数预计 0 可变参数，但提供的却是 1 参数
+  
+  main.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\main.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\include\LevelScene.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“src/main.cpp”)
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\main.cpp(70,33): error C2001: 常量中有换行符
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\main.cpp(71,1): error C2001: 常量中有换行符
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\main.cpp(91,1): error C2001: 常量中有换行符
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\main.cpp(70,1): error C1057: 宏扩展中遇到意外的文件结束
+  NormalZombie.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\NormalZombie.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\include\normalzombie.h(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  (编译源文件“src/NormalZombie.cpp”)
+  
+  ObjectManager.cpp
+  Peashooter.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Peashooter.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Peashooter.cpp(22,18): error C2601: “Peashooter::Update”: 本地函数定义是非法的
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Peashooter.cpp(13,31):
+      此行有一个“{”没有匹配项
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Peashooter.cpp(23,34): error C1075: “{”: 未找到匹配令牌
+  Plant.cpp
+  Scene.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Scene.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  Sprite.cpp
+  Sunflower.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(11,17): error C2601: “Sunflower::Update”: 本地函数定义是非法的
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(10,1):
+      此行有一个“{”没有匹配项
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(17,17): error C2601: “Sunflower::draw”: 本地函数定义是非法的
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(10,1):
+      此行有一个“{”没有匹配项
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(54,17): error C2039: "update": 不是 "Sunflower" 的成员
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\include\Sunflower.h(4,7):
+      参见“Sunflower”的声明
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(54,17): error C2601: “update”: 本地函数定义是非法的
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(10,1):
+      此行有一个“{”没有匹配项
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(61,16): error C2601: “Sunflower::produce_sunshine”: 本地函数定义是非法的
+      C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(10,1):
+      此行有一个“{”没有匹配项
+  
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Sunflower.cpp(10,1): error C1075: “{”: 未找到匹配令牌
+  world.cpp
+  Zombie.cpp
+C:\Users\Lenovo\Desktop\PVZtest\C-Love-you-1314-Team-Second-project-PVZ\src\Zombie.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  正在生成代码...
