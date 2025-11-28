@@ -9,7 +9,7 @@ private:
     int height = 50;           // 向日葵自身高度（固定尺寸）
 
 public:
-    Sunflower(int x, int y);
+    Sunflower(const std::string& objType, PlantType type, int health, int cost);
     void draw() const override;
     void update() override;
     int produce_sunshine() override;
