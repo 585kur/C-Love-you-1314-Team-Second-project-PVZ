@@ -13,6 +13,8 @@ int main() {
     setbkcolor(RGB(100, 180, 100)); // 设置背景色
     cleardevice();
 
+    BeginBatchDraw();
+
     // 2. 定义场景状态（菜单/关卡）
     enum class GameState { MENU, LEVEL, EXIT };
     GameState currentState = GameState::MENU;
@@ -81,12 +83,15 @@ int main() {
             break;
         }
 
+        FlushBatchDraw();
+
         // 控制FPS（约60帧）
         Sleep(16);
     }
 
     // 5. 清理资源
     levelScene.onExit();
+    EndBatchDraw();
     closegraph();
     std::cout << "游戏退出" << std::endl;
     return 0;
