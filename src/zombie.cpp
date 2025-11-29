@@ -2,92 +2,142 @@
 #include "Plant.h"
 #include <iostream>
 
-// 构造函数：初始化Object+自身属性，添加碰撞体
+// 构造函数
 Zombie::Zombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval)
-    : Object(objType), speed(speed), hp(hp), attackDamage(attackDamage), attackInterval(attackInterval) {
-    // 添加矩形碰撞体（僵尸尺寸60x80）
+    : Object(objType), speed(speed), hp(hp),
+    attackDamage(attackDamage), attackInterval(attackInterval)
+{
+    // 添加矩形碰撞体（60×80）
     AddComponent<BoxCollider>(60.0f, 80.0f);
 }
 
-void Zombie::Update(float dt) {
-    if (!IsAlive()) return; // 用Object的IsAlive()替代alive成员
+void Zombie::Update(float dt)
+{
+    if (!IsAlive()) return;
 
-    // ========= 攻击模式 =========
-    if (isAttacking) {
+    // ========== 僵尸正在攻击 ==========
+    if (isAttacking)
+    {
         attackTimer += dt;
-        if (attackTimer >= attackInterval) {
-            attackTimer = 0;
-            onAttackPlant();
+
+        // 如果目标植物不存在或已死亡 → 停止攻击，恢复移动
+        if (!targetPlant || targetPlant->is_dead())
+        {
+            stopAttack();
+            targetPlant = nullptr;
+            return;
         }
-        return; // 攻击时不移动
+
+        // 攻击冷却计时
+        if (attackTimer >= attackInterval)
+        {
+            attackTimer = 0;
+            onAttackPlant();  // 扣植物 HP
+
+            // 植物可能在攻击后死亡 → 下一帧自动解除攻击
+            if (targetPlant && targetPlant->is_dead())
+            {
+                stopAttack();
+                targetPlant = nullptr;
+            }
+        }
+
+        return; // 攻击模式下不移动
     }
 
-    // ========= 移动（通过Transform组件）=========
-    if (auto* trans = GetTransform()) {
+    // ========== 移动 ==========
+    if (auto* trans = GetTransform())
+    {
         Vector2D pos = trans->GetPosition();
-        pos.x -= speed * dt; // 向左移动
+        pos.x -= speed * dt;  // 向左移动
         trans->SetPosition(pos.x, pos.y);
 
-        // ========= 到最左边：失败判定 =========
-        if (pos.x < -60) { // 僵尸宽度60，完全出左边界
-            Destroy(); // 用Object的Destroy()标记死亡
+        // 到最左边：游戏失败
+        if (pos.x < -60)  // 僵尸宽度 60
+        {
+            Destroy();
             onReachEnd();
+            return;
         }
     }
 
-    // ========= 碰撞检测：寻找前方植物 =========
-    if (auto* collider = GetComponent<BoxCollider>()) {
-        // 获取碰撞的植物（通过Collider的类型筛选）
-        auto collidedPlants = collider->GetCollisionsByType("Plant");
-        if (!collidedPlants.empty() && !targetPlant) {
-            targetPlant = dynamic_cast<Plant*>(collidedPlants[0]);
-            if (targetPlant) startAttack();
+    // ========== 检测植物碰撞，触发攻击 ==========
+    if (auto* collider = GetComponent<BoxCollider>())
+    {
+        auto collided = collider->GetCollisionsByType("Plant");
+        Plant* firstPlant = nullptr;
+
+        // 安全筛选（防止 null 或类型不符）
+        for (auto* obj : collided)
+        {
+            if (auto* p = dynamic_cast<Plant*>(obj))
+            {
+                firstPlant = p;
+                break;
+            }
+        }
+
+        // 找到植物 → 开始攻击
+        if (firstPlant && !isAttacking)
+        {
+            targetPlant = firstPlant;
+            startAttack();  // 设置攻击状态
         }
     }
 }
 
-void Zombie::onHit(int damage) {
+void Zombie::onHit(int damage)
+{
     if (!IsAlive()) return;
 
     hp -= damage;
-    if (hp <= 0) {
+    if (hp <= 0)
+    {
         hp = 0;
-        die();
+        die();  // 死亡处理
     }
 }
 
-void Zombie::onAttackPlant() {
-    if (!targetPlant || targetPlant->is_dead()) {
-        stopAttack();
-        targetPlant = nullptr;
-        return;
-    }
+void Zombie::onAttackPlant()
+{
+    if (!targetPlant) return;
 
-    targetPlant->onAttacked(attackDamage); // 调用Plant的受攻击方法
+    targetPlant->onAttacked(attackDamage);
 }
 
-void Zombie::startAttack() {
+void Zombie::startAttack()
+{
     isAttacking = true;
     attackTimer = 0;
 }
 
-void Zombie::stopAttack() {
+void Zombie::stopAttack()
+{
     isAttacking = false;
+    attackTimer = 0;
 }
 
-void Zombie::die() {
-    Destroy(); // 标记为死亡
+void Zombie::die()
+{
+    // 死亡时确保彻底停止攻击
+    isAttacking = false;
+    targetPlant = nullptr;
+
+    Destroy();  // Object 方法：标记为死亡
     std::cout << "A zombie has been defeated!" << '\n';
 }
 
-void Zombie::onReachEnd() {
+void Zombie::onReachEnd()
+{
     std::cout << "Zombie reached the end! Game Over!" << '\n';
 }
 
-void Zombie::setTargetPlant(Plant* plant) {
+void Zombie::setTargetPlant(Plant* plant)
+{
     targetPlant = plant;
 }
 
-Plant* Zombie::getTargetPlant() const {
+Plant* Zombie::getTargetPlant() const
+{
     return targetPlant;
 }
