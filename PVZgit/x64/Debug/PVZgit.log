@@ -1,8 +1,2 @@
-﻿  LevelScene.cpp
-C:\Users\pc\Desktop\C++\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(112,26): warning C4002: 类函数宏的调用“RGB”参数过多
-C:\Users\pc\Desktop\C++\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(188,74): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-C:\Users\pc\Desktop\C++\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(217,30): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-C:\Users\pc\Desktop\C++\C-Love-you-1314-Team-Second-project-PVZ\src\LevelScene.cpp(216,30): warning C4244: “参数”: 从“int”转换到“float”，可能丢失数据
-  main.cpp
-  正在生成代码...
-  PVZgit.vcxproj -> C:\Users\pc\Desktop\C++\C-Love-you-1314-Team-Second-project-PVZ\x64\Debug\PVZgit.exe
+﻿  main.cpp
+  PVZgit.vcxproj -> C:\Users\Lenovo\Desktop\PVZ\C-Love-you-1314-Team-Second-project-PVZ\x64\Debug\PVZgit.exe
