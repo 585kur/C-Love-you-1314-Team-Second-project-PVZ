@@ -57,10 +57,12 @@ public:
     void eventTick(float dt) override; // 逻辑更新
     void drawTick() override; // 绘制
     void handleInput(ExMessage& msg); // 处理输入（新增）
-
+    
     // 辅助方法
     void SpawnZombie(int row); // 生成僵尸
     bool PlantOnGrid(int row, int col, const std::string& plantType); // 种植植物
     void AddSunshine(int amount) { sunshine += amount; } // 增加阳光
 };
+
+
 #endif

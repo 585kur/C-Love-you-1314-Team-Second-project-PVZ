@@ -1,6 +1,9 @@
 #include "Zombie.h"
 #include "Plant.h"
 #include <iostream>
+#include <graphics.h>
+#include <conio.h>
+
 
 // 构造函数
 Zombie::Zombie(const std::string& objType, float speed, int hp, int attackDamage, float attackInterval)
@@ -9,6 +12,7 @@ Zombie::Zombie(const std::string& objType, float speed, int hp, int attackDamage
 {
     // 添加矩形碰撞体（60×80）
     AddComponent<BoxCollider>(60.0f, 80.0f);
+  
 }
 
 void Zombie::Update(float dt)

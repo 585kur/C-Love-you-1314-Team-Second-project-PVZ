@@ -3,6 +3,36 @@
 #include <graphics.h>
 #include <iostream>
 
+// 手动去黑底函数
+void putimage_alpha1(int x, int y, IMAGE* img)
+{
+    int width = img->getwidth();
+    int height = img->getheight();
+
+    // 临时创建图像用于处理
+    DWORD* dst = GetImageBuffer();
+    DWORD* src = GetImageBuffer(img);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            int idx = i * width + j;
+            int dst_idx = (y + i) * getwidth() + (x + j);
+
+            BYTE r = GetRValue(src[idx]);
+            BYTE g = GetGValue(src[idx]);
+            BYTE b = GetBValue(b);
+
+            // 如果不是纯黑色，就绘制
+            if (!(r == 0 && g == 0 && b == 0))
+            {
+                dst[dst_idx] = src[idx];
+            }
+        }
+    }
+}
+
 // 构造函数：接收objType、type、health、cost，调用Plant基类构造
 Peashooter::Peashooter(const std::string& objType, PlantType type, int health, int cost)
     : Plant(objType, type, health, cost) { // 直接传递参数给Plant基类
@@ -19,24 +49,13 @@ void Peashooter::draw() const {
     float y = trans->GetPosition().y;
     int width = 50, height = 50;
 
-    // 绘制主体
-    setfillcolor(GREEN);
-    solidrectangle(static_cast<int>(x), static_cast<int>(y),
-        static_cast<int>(x + width), static_cast<int>(y + height));
+    IMAGE img_peashooter;
+    loadimage(&img_peashooter, _T("C:\\Users\\Administrator\\Documents\\GitHub\\C-Love-you-1314-Team-Second-project-PVZ\\图片素材\\peashooter(1).png"));
 
-    // 绘制炮管
-    setfillcolor(RGB(0, 100, 0));
-    solidrectangle(static_cast<int>(x + width - 5), static_cast<int>(y + 15),
-        static_cast<int>(x + width + 10), static_cast<int>(y + 35));
-
-    // 绘制血条
-    setfillcolor(RED);
-    solidrectangle(static_cast<int>(x), static_cast<int>(y - 10),
-        static_cast<int>(x + width), static_cast<int>(y - 6));
-    float health_ratio = static_cast<float>(get_health()) / get_max_health();
-    setfillcolor(GREEN);
-    solidrectangle(static_cast<int>(x), static_cast<int>(y - 10),
-        static_cast<int>(x + width * health_ratio), static_cast<int>(y - 6));
+    // 使用自定义函数显示（去黑底）
+    if (!is_dead()) {
+        putimage_alpha1(trans->GetPosition().x, trans->GetPosition().y, &img_peashooter);
+    }
 }
 
 // 更新逻辑（保持不变）

@@ -1,2 +1,3 @@
-﻿  main.cpp
-  PVZgit.vcxproj -> C:\Users\Lenovo\Desktop\PVZ\C-Love-you-1314-Team-Second-project-PVZ\x64\Debug\PVZgit.exe
+﻿  NormalZombie.cpp
+C:\Users\Administrator\Documents\GitHub\C-Love-you-1314-Team-Second-project-PVZ\src\NormalZombie.cpp(26,22): warning C4333: “>>”: 右移位数过大，数据将丢失
+  PVZgit.vcxproj -> C:\Users\Administrator\Documents\GitHub\C-Love-you-1314-Team-Second-project-PVZ\x64\Debug\PVZgit.exe

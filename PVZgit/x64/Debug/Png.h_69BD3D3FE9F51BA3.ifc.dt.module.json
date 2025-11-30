@@ -1,0 +1,22 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "PVZgit\\x64\\Debug\\Png.obj",
+            "outputs": [
+                "PVZgit\\x64\\Debug\\Png.h_69BD3D3FE9F51BA3.ifc.dt.module.json",
+                "PVZgit\\x64\\Debug\\Png.h_69BD3D3FE9F51BA3.ifc.dt.d.json",
+                "PVZgit\\x64\\Debug\\Png.h.ifc"
+            ],
+            "provides": [
+                {
+                    "logical-name": "C:\\Users\\Administrator\\Documents\\GitHub\\C-Love-you-1314-Team-Second-project-PVZ\\Png.h",
+                    "source-path": "c:\\users\\administrator\\documents\\github\\c-love-you-1314-team-second-project-pvz\\png.h",
+                    "lookup-method": "absolute"
+                }
+            ],
+            "requires": []
+        }
+    ]
+}

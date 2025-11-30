@@ -7,7 +7,35 @@
 #include <windows.h>
 #include <cstdlib>
 
+// 手动去黑底函数
+void putimage_alpha0(int x, int y, IMAGE* img)
+{
+    int width = img->getwidth();
+    int height = img->getheight();
 
+    // 临时创建图像用于处理
+    DWORD* dst = GetImageBuffer();
+    DWORD* src = GetImageBuffer(img);
+
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            int idx = i * width + j;
+            int dst_idx = (y + i) * getwidth() + (x + j);
+
+            BYTE r = GetRValue(src[idx]);
+            BYTE g = GetGValue(src[idx]);
+            BYTE b = GetBValue(b);
+
+            // 如果不是纯黑色，就绘制
+            if (!(r == 0 && g == 0 && b == 0))
+            {
+                dst[dst_idx] = src[idx];
+            }
+        }
+    }
+}
 
 LevelScene::LevelScene(std::string name) : Scene(name) {
     // 初始化5行9列地图网格
@@ -81,10 +109,17 @@ void LevelScene::drawTick() {
         line(MAP_X, y, MAP_X + MAP_COLS * GRID_W, y);
     }
 
+    //地图图片
+    IMAGE img_map;
+    loadimage(&img_map, _T("C:\\Users\\Administrator\\Documents\\GitHub\\C-Love-you-1314-Team-Second-project-PVZ\\图片素材\\bg5(1).jpg"));
+    putimage(0, 0, &img_map);
+
     // 3. 绘制卡槽
     // 卡槽背景
-    setfillcolor(RGB(60, 60, 60));
-    fillrectangle(0, CARD_Y, 800, CARD_Y + CARD_H);
+    IMAGE img_bar;
+    loadimage(&img_bar, _T("C:\\Users\\Administrator\\Documents\\GitHub\\C-Love-you-1314-Team-Second-project-PVZ\\图片素材\\bar(1).png"));
+    putimage_alpha0(0, 10, &img_bar);
+    
     // 绘制每张卡片
     for (int i = 0; i < cards.size(); i++) {
         const auto& card = cards[i];
@@ -220,3 +255,4 @@ bool LevelScene::PlantOnGrid(int row, int col, const std::string& plantType) {
     sunshine -= plant->get_cost();
     return true;
 }
+

@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"  
 #include "Collider.h" 
+#include<graphics.h>
 
 // 植物类型枚举
 enum class PlantType {
@@ -53,4 +54,7 @@ public:
     bool is_dead() const {
         return health <= 0;
     }
+
+  
+
 };
